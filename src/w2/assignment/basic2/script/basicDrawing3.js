@@ -159,6 +159,6 @@ function draw() {
   rect(180, 250, 80, 100);
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
+//   function windowResized() {
+//     resizeCanvas(windowWidth, windowHeight);
+//   }

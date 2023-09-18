@@ -1,6 +1,5 @@
 function setup() {
   setCanvasContainer('p5-canvas2', 2, 2, true);
-  //   createCanvas(windowWidth, windowHeight);
   background('cornflowerblue');
 }
 

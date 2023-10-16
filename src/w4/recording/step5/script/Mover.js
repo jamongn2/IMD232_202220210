@@ -21,29 +21,32 @@ class Mover {
     this.acc.mult(0);
   }
 
-  checkEdges() {
-    if (this.pos.x < 0) {
-      //   // 0보다 얼마나 뚫고 갔는가?
-      //   let delta = this.pos.x - 0;
-      //   // 그 뚫고간 거리에 -1을 곱해 방향을 뒤집고,
-      //   delta *= -1;
-      //   // 0을 기준으로 뒤집힌 거리를 더해준다.
-      //   this.pos.x = 0 + delta;
-      this.pos.x -= 0;
-      this.pos.x *= -1;
-      this.pos.x += 0;
-      this.vel.x *= -1;
-    } else if (this.pos.x > width - 1) {
-      this.pos.x -= width - 1;
-      this.pos.x *= -1;
-      this.pos.x += width - 1;
-      this.vel.x *= -1;
+  contactEdge() {
+    if (this.pos.y >= height - 1 - this.radius - 1) {
+      return true;
+    } else {
+      return false;
     }
-    if (this.pos.y > height - 1) {
-      this.pos.y -= height - 1;
+  }
+
+  checkEdges() {
+    const bounce = -0.9;
+    if (this.pos.x < 0 + this.radius) {
+      this.pos.x -= 0 + this.radius;
+      this.pos.x *= -1;
+      this.pos.x += 0 + this.radius;
+      this.vel.x *= bounce;
+    } else if (this.pos.x > width - 1 - this.radius) {
+      this.pos.x -= width - 1 - this.radius;
+      this.pos.x *= -1;
+      this.pos.x += width - 1 - this.radius;
+      this.vel.x *= bounce;
+    }
+    if (this.pos.y > height - 1 - this.radius) {
+      this.pos.y -= height - 1 - this.radius;
       this.pos.y *= -1;
-      this.pos.y += height - 1;
-      this.vel.y *= -1;
+      this.pos.y += height - 1 - this.radius;
+      this.vel.y *= bounce;
     }
   }
 

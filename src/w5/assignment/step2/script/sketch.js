@@ -14,12 +14,12 @@ function setup() {
 
 function draw() {
   pendulumA.applyGravity(gravity);
-  pendulumA.update();
+  pendulumA.update1();
   pendulumB.applyGravity(gravity);
-  pendulumB.update();
+  pendulumB.update2();
   background(255);
-  pendulumA.display();
-  pendulumB.display();
+  pendulumA.display1();
+  pendulumB.display2();
 }
 
 function mouseMoved() {

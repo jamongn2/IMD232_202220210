@@ -16,24 +16,28 @@ function draw() {
   pendulumA.applyGravity(gravity);
   pendulumA.update1();
   pendulumB.applyGravity(gravity);
-  pendulumB.update2();
+  pendulumB.update1();
   background(255);
   pendulumA.display1();
   pendulumB.display2();
 }
 
 function mouseMoved() {
-  pendulumA.mouseMoved(mouseX, mouseY);
+  // pendulumA.mouseMoved(mouseX, mouseY);
+  // pendulumB.mouseMoved(mouseX, mouseY);
 }
 
 function mousePressed() {
   pendulumA.mousePressed(mouseX, mouseY);
+  pendulumB.mousePressed(mouseX, mouseY);
 }
 
 function mouseDragged() {
   pendulumA.mouseDragged(mouseX, mouseY);
+  pendulumB.mouseDragged(mouseX, mouseY);
 }
 
 function mouseReleased() {
   pendulumA.mouseReleased();
+  pendulumB.mouseReleased();
 }

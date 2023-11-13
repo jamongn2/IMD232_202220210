@@ -1,12 +1,13 @@
 var Engine = Matter.Engine,
   Render = Matter.Render,
   Runner = Matter.Runner,
-  Body = Matter.Body,
-  Composite = Matter.Composite,
   Composites = Matter.Composites,
+  Events = Matter.Events,
   Constraint = Matter.Constraint,
   MouseConstraint = Matter.MouseConstraint,
   Mouse = Matter.Mouse,
+  Body = Matter.Body,
+  Composite = Matter.Composite,
   Bodies = Matter.Bodies;
 
 // create engine
@@ -14,7 +15,7 @@ var engine = Engine.create(),
   world = engine.world;
 
 // create renderer
-const elem = document.querySelector('#canvas');
+let elem = document.querySelector('#canvas');
 var render = Render.create({
   element: elem,
   engine: engine,
@@ -22,8 +23,6 @@ var render = Render.create({
     width: 800,
     height: 600,
     showAngleIndicator: true,
-    showCollisions: true,
-    showVelocity: true,
   },
 });
 
@@ -34,74 +33,59 @@ var runner = Runner.create();
 Runner.run(runner, engine);
 
 // add bodies
-var group = Body.nextGroup(true);
-
-var ropeA = Composites.stack(100, 50, 8, 1, 10, 10, function (x, y) {
-  return Bodies.rectangle(x, y, 50, 20, { collisionFilter: { group: group } });
-});
-
-Composites.chain(ropeA, 0.5, 0, -0.5, 0, {
-  stiffness: 0.8,
-  length: 2,
-  render: { type: 'line' },
-});
-Composite.add(
-  ropeA,
-  Constraint.create({
-    bodyB: ropeA.bodies[0],
-    pointB: { x: -25, y: 0 },
-    pointA: { x: ropeA.bodies[0].position.x, y: ropeA.bodies[0].position.y },
-    stiffness: 0.5,
-  })
-);
-
-group = Body.nextGroup(true);
-
-var ropeB = Composites.stack(350, 50, 10, 1, 10, 10, function (x, y) {
-  return Bodies.circle(x, y, 20, { collisionFilter: { group: group } });
-});
-
-Composites.chain(ropeB, 0.5, 0, -0.5, 0, {
-  stiffness: 0.8,
-  length: 2,
-  render: { type: 'line' },
-});
-Composite.add(
-  ropeB,
-  Constraint.create({
-    bodyB: ropeB.bodies[0],
-    pointB: { x: -20, y: 0 },
-    pointA: { x: ropeB.bodies[0].position.x, y: ropeB.bodies[0].position.y },
-    stiffness: 0.5,
-  })
-);
-
-group = Body.nextGroup(true);
-
-var ropeC = Composites.stack(600, 50, 13, 1, 10, 10, function (x, y) {
-  return Bodies.rectangle(x - 20, y, 50, 20, {
-    collisionFilter: { group: group },
-    chamfer: 5,
+var ground = Bodies.rectangle(395, 600, 815, 50, {
+    isStatic: true,
+    render: { fillStyle: '#060a19' },
+  }),
+  rockOptions = { density: 0.004 },
+  rock = Bodies.polygon(170, 450, 8, 20, rockOptions),
+  anchor = { x: 170, y: 450 },
+  elastic = Constraint.create({
+    pointA: anchor,
+    bodyB: rock,
+    length: 0.01,
+    damping: 0.01,
+    stiffness: 0.05,
   });
+
+var pyramid = Composites.pyramid(500, 300, 9, 10, 0, 0, function (x, y) {
+  return Bodies.rectangle(x, y, 25, 40);
 });
 
-Composites.chain(ropeC, 0.3, 0, -0.3, 0, { stiffness: 1, length: 0 });
-Composite.add(
-  ropeC,
-  Constraint.create({
-    bodyB: ropeC.bodies[0],
-    pointB: { x: -20, y: 0 },
-    pointA: { x: ropeC.bodies[0].position.x, y: ropeC.bodies[0].position.y },
-    stiffness: 0.5,
-  })
-);
+var ground2 = Bodies.rectangle(610, 250, 200, 20, {
+  isStatic: true,
+  render: { fillStyle: '#060a19' },
+});
 
-Composite.add(world, [
-  ropeA,
-  ropeB,
-  ropeC,
-  Bodies.rectangle(400, 600, 1200, 50.5, { isStatic: true }),
+var pyramid2 = Composites.pyramid(550, 0, 5, 10, 0, 0, function (x, y) {
+  return Bodies.rectangle(x, y, 25, 40);
+});
+
+Composite.add(engine.world, [
+  ground,
+  pyramid,
+  ground2,
+  pyramid2,
+  rock,
+  elastic,
 ]);
+
+Events.on(engine, 'afterUpdate', function () {
+  if (
+    mouseConstraint.mouse.button === -1 &&
+    (rock.position.x > 190 || rock.position.y < 430)
+  ) {
+    // Limit maximum speed of current rock.
+    if (Body.getSpeed(rock) > 45) {
+      Body.setSpeed(rock, 45);
+    }
+
+    // Release current rock and add a new one.
+    rock = Bodies.polygon(170, 450, 7, 20, rockOptions);
+    Composite.add(engine.world, rock);
+    elastic.bodyB = rock;
+  }
+});
 
 // add mouse control
 var mouse = Mouse.create(render.canvas),
@@ -123,5 +107,5 @@ render.mouse = mouse;
 // fit the render viewport to the scene
 Render.lookAt(render, {
   min: { x: 0, y: 0 },
-  max: { x: 700, y: 600 },
+  max: { x: 800, y: 600 },
 });

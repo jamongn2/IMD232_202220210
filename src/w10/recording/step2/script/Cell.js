@@ -24,12 +24,33 @@ class Cell {
 
     const myCol = this.idx % colNum;
     const myRow = floor(this.idx / colNum);
-
+    //왼쪽 귀퉁이
     if (myCol === 0) {
       idxList[0] = -1;
       idxList[6] = -1;
       idxList[7] = -1;
     }
+    //오른쪽 귀퉁이
+    else if (myCol === colNum - 1) {
+      idxList[2] = -1;
+      idxList[3] = -1;
+      idxList[4] = -1;
+    }
+    //위쪽 귀퉁이
+    if (myRow === 0) {
+      idxList[0] = -1;
+      idxList[1] = -1;
+      idxList[2] = -1;
+    }
+    //아래쪽 귀퉁이
+    else if (myRow === rowNum - 1) {
+      idxList[4] = -1;
+      idxList[5] = -1;
+      idxList[6] = -1;
+    }
+    idxList.forEach((eachIdx) => {
+      this.friends.push(cells[eachIdx]);
+    });
   }
 
   calcNextState() {
@@ -39,9 +60,10 @@ class Cell {
         cnt++;
       }
     });
+
     if (this.state) {
       if (cnt < 2 || cnt > 3) {
-        this.nextState = flase;
+        this.nextState = false;
       } else {
         this.nextState = this.state;
       }
@@ -61,11 +83,6 @@ class Cell {
   display() {
     push();
     translate(this.x, this.y);
-    // if (this.state) {
-    //   fill(32);
-    // } else {
-    //   fill(255);
-    // }
     fill(this.state ? 32 : 255);
     rect(0, 0, this.w, this.h);
     pop();

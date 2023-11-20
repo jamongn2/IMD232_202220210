@@ -1,12 +1,14 @@
 let cells = [];
 
-const colNum = 10,
+const colNum = 50,
   rowNum = colNum;
 
 let w, h;
 
 function setup() {
   setCanvasContainer('canvas', 1, 1, true);
+
+  randomSeed(1);
 
   w = width / colNum;
   h = height / rowNum;
@@ -17,7 +19,7 @@ function setup() {
       const y = h * row;
       //   true혹은 false값이 되는 구문 ? 참일경우사용할값 : 거짓일경우사용할값
       //   let state = random() < 0.5 ? false : true;
-      let state = random() < 0.5;
+      const state = random() < 0.5;
       const idx = colNum * row + col;
       const newCell = new Cell(x, y, w, h, state, idx);
       newCell.addFriends(cells);
@@ -36,6 +38,13 @@ function setup() {
 
 function draw() {
   background('white');
+
+  cells.forEach((eachCell) => {
+    eachCell.calcNextState();
+  });
+  cells.forEach((eachCell) => {
+    eachCell.updateState();
+  });
   cells.forEach((eachCell) => {
     eachCell.display();
   });

@@ -1,12 +1,12 @@
 let cells = [];
 
-const colNum = 100,
-  rowNum = colNum;
+const colNum = 51,
+  rowNum = 1;
 
 let w, h;
 
 function setup() {
-  setCanvasContainer('canvas', 1, 1, true);
+  setCanvasContainer('canvas', 51, 1, true);
 
   randomSeed(1);
 
@@ -17,9 +17,11 @@ function setup() {
     for (let col = 0; col < colNum; col++) {
       const x = w * col;
       const y = h * row;
-      //   true혹은 false값이 되는 구문 ? 참일경우사용할값 : 거짓일경우사용할값
-      //   let state = random() < 0.5 ? false : true;
-      let state = random() < 0.5;
+      //   const state = random() < 0.5;
+      let state = false;
+      if (col === floor(colNum / 2)) {
+        state = true;
+      }
       const idx = colNum * row + col;
       const newCell = new Cell(x, y, w, h, state, idx);
       cells.push(newCell);
@@ -32,7 +34,9 @@ function setup() {
 
   console.log(cells);
 
+  frameRate(4);
   background('white');
+  // noLoop();
 }
 
 function draw() {
@@ -41,9 +45,11 @@ function draw() {
   cells.forEach((eachCell) => {
     eachCell.calcNextState();
   });
+
   cells.forEach((eachCell) => {
     eachCell.updateState();
   });
+
   cells.forEach((eachCell) => {
     eachCell.display();
   });

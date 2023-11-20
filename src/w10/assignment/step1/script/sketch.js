@@ -5,6 +5,11 @@ const colNum = 100,
 
 let w, h;
 
+let patternBlock = {
+  width: 4,
+  height: 4,
+};
+
 function setup() {
   setCanvasContainer('canvas', 1, 1, true);
 
@@ -17,9 +22,15 @@ function setup() {
     for (let col = 0; col < colNum; col++) {
       const x = w * col;
       const y = h * row;
-      //   true혹은 false값이 되는 구문 ? 참일경우사용할값 : 거짓일경우사용할값
-      //   let state = random() < 0.5 ? false : true;
-      let state = random() < 0.5;
+      let state;
+      const rand = random();
+      if (rand < 1 / 3) {
+        state = 'rock';
+      } else if (rand < 2 / 3) {
+        state = 'paper';
+      } else {
+        state = 'scissors';
+      }
       const idx = colNum * row + col;
       const newCell = new Cell(x, y, w, h, state, idx);
       cells.push(newCell);
@@ -32,6 +43,7 @@ function setup() {
 
   console.log(cells);
 
+  frameRate(10);
   background('white');
 }
 

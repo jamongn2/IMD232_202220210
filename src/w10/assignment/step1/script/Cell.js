@@ -48,30 +48,50 @@ class Cell {
       idxList[5] = -1;
       idxList[6] = -1;
     }
+
     idxList.forEach((eachIdx) => {
-      this.friends.push(cells[eachIdx]);
+      if (eachIdx !== -1) {
+        this.friends.push(cellArray[eachIdx]);
+      }
     });
   }
 
   calcNextState() {
-    let cnt = 0;
+    let cntRock = 0;
+    let cntPaper = 0;
+    let cntScissors = 0;
+
     this.friends.forEach((eachFriend) => {
-      if (eachFriend?.state) {
-        cnt++;
+      switch (eachFriend?.state) {
+        case 'rock':
+          cntRock++;
+          break;
+        case 'paper':
+          cntPaper++;
+          break;
+        case 'scissors':
+          cntScissors++;
+          break;
       }
     });
 
-    if (this.state) {
-      if (cnt < 2 || cnt > 3) {
-        this.nextState = false;
+    if (this.state === 'rock') {
+      if (cntPaper > 2) {
+        this.nextState = 'paper';
       } else {
-        this.nextState = this.state;
+        this.nextState = 'rock';
       }
-    } else {
-      if (cnt === 3) {
-        this.nextState = true;
+    } else if (this.state === 'paper') {
+      if (cntScissors > 2) {
+        this.nextState = 'scissors';
       } else {
-        this.nextState = this.state;
+        this.nextState = 'paper';
+      }
+    } else if (this.state === 'scissors') {
+      if (cntRock > 2) {
+        this.nextState = 'rock';
+      } else {
+        this.nextState = 'scissors';
       }
     }
   }
@@ -83,12 +103,19 @@ class Cell {
   display() {
     push();
     translate(this.x, this.y);
-    // if (this.state) {
-    //   fill(32);
-    // } else {
-    //   fill(255);
-    // }
-    fill(this.state ? 32 : 255);
+
+    switch (this.state) {
+      case 'rock':
+        fill(255, 0, 0); // 빨강색
+        break;
+      case 'paper':
+        fill(0, 255, 0); // 초록색
+        break;
+      case 'scissors':
+        fill(0, 0, 255); // 파란색
+        break;
+    }
+
     rect(0, 0, this.w, this.h);
     pop();
   }

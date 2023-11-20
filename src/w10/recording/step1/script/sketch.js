@@ -5,6 +5,11 @@ const colNum = 100,
 
 let w, h;
 
+let patternBlock = {
+  width: 4,
+  height: 4,
+};
+
 function setup() {
   setCanvasContainer('canvas', 1, 1, true);
 

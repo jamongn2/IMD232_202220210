@@ -12,7 +12,7 @@ function setup() {
 }
 
 function draw() {
-  particleArray.push(new Particle(width / 2, 20));
+  particleArray.push(new Particle(width / 2, 40));
 
   background(255);
   for (let a = 0; a < particleArray.length; a++) {

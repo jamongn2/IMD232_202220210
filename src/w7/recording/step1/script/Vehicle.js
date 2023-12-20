@@ -17,7 +17,7 @@ class Vehicle {
   update() {
     this.vel.add(this.acc);
     this.vel.limit(this.speedMx);
-    this.pos.add(this.vel);
+    // this.pos.add(this.vel);
     this.acc.mult(0);
   }
 
